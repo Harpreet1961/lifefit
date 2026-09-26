@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: lifefit-postgres
+
+    environment:
+      POSTGRES_DB: lifefit
+      POSTGRES_USER: lifefit
+      POSTGRES_PASSWORD: lifefit_password
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lifefit -d lifefit"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: lifefit-backend:3.0
+    container_name: lifefit-backend
+
+    ports:
+      - "5050:5050"
+
+    environment:
+      PORT: 5050
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: lifefit
+      DB_USER: lifefit
+      DB_PASSWORD: lifefit_password
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    image: lifefit-frontend:2.0
+    container_name: lifefit-frontend
+
+    ports:
+      - "5173:8080"
+
+volumes:
+  postgres_data:
