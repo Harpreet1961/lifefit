@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lifefit-backend-config
+data:
+  database.json: |
+    {
+      "host": "postgres",
+      "port": 5432,
+      "database": "lifefit",
+      "user": "lifefit"
+    }

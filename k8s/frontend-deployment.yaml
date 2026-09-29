@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lifefit-frontend
+  labels:
+    app: lifefit-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lifefit-frontend
+  template:
+    metadata:
+      labels:
+        app: lifefit-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: lifefit-frontend:2.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              protocol: TCP

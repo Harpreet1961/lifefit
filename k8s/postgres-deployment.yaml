@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lifefit-postgres
+  labels:
+    app: lifefit-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lifefit-postgres
+  template:
+    metadata:
+      labels:
+        app: lifefit-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "lifefit"
+            - name: POSTGRES_USER
+              value: "lifefit"
+            - name: POSTGRES_PASSWORD
+              value: "lifefit_password"
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+            - name: db-init
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true
+          
+      volumes: 
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: lifefit-postgres-pvc
+        - name: db-init
+          configMap:
+            name: lifefit-db-init
