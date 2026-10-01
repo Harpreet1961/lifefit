@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
 
 function App() {
   const [selectedDate, setSelectedDate] = useState(
@@ -98,14 +99,12 @@ function App() {
           workoutsResponse,
           profileResponse,
         ] = await Promise.all([
-          fetch(
-            `http://localhost:5050/api/nutrition/today?date=${selectedDate}`
-          ),
-          fetch(`http://localhost:5050/api/meals?date=${selectedDate}`),
-          fetch('http://localhost:5050/api/foods'),
-          fetch('http://localhost:5050/api/exercises'),
-          fetch(`http://localhost:5050/api/workouts?date=${selectedDate}`),
-          fetch('http://localhost:5050/api/profile'),
+          fetch(`${API_BASE_URL}/api/nutrition/today?date=${selectedDate}`),
+          fetch(`${API_BASE_URL}/api/meals?date=${selectedDate}`),
+          fetch(`${API_BASE_URL}/api/foods`),
+          fetch(`${API_BASE_URL}/api/exercises`),
+          fetch(`${API_BASE_URL}/api/workouts?date=${selectedDate}`),
+          fetch(`${API_BASE_URL}/api/profile`),
         ])
 
         if (
@@ -160,7 +159,7 @@ function App() {
       setSavingProfile(true)
       setError('')
 
-      const response = await fetch('http://localhost:5050/api/profile', {
+      const response = await fetch(`${API_BASE_URL}/api/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -222,7 +221,7 @@ function App() {
       setAddingMeal(true)
       setError('')
 
-      const response = await fetch('http://localhost:5050/api/meals', {
+      const response = await fetch(`${API_BASE_URL}/api/meals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -245,7 +244,7 @@ function App() {
       setMeals((currentMeals) => [data.meal, ...currentMeals])
 
       const nutritionResponse = await fetch(
-        `http://localhost:5050/api/nutrition/today?date=${selectedDate}`
+        `${API_BASE_URL}/api/nutrition/today?date=${selectedDate}`
       )
 
       if (!nutritionResponse.ok) {
@@ -271,7 +270,7 @@ function App() {
       setError('')
 
       const response = await fetch(
-        `http://localhost:5050/api/meals/${mealId}`,
+        `${API_BASE_URL}/api/meals/${mealId}`,
         {
           method: 'DELETE',
         }
@@ -288,7 +287,7 @@ function App() {
       )
 
       const nutritionResponse = await fetch(
-        `http://localhost:5050/api/nutrition/today?date=${selectedDate}`
+        `${API_BASE_URL}/api/nutrition/today?date=${selectedDate}`
       )
 
       if (!nutritionResponse.ok) {
@@ -315,7 +314,7 @@ function App() {
       setAddingWorkout(true)
       setError('')
 
-      const response = await fetch('http://localhost:5050/api/workouts', {
+      const response = await fetch(`${API_BASE_URL}/api/workouts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -335,7 +334,7 @@ function App() {
       }
 
       const workoutsResponse = await fetch(
-        `http://localhost:5050/api/workouts?date=${selectedDate}`
+        `${API_BASE_URL}/api/workouts?date=${selectedDate}`
       )
 
       const workoutsData = await workoutsResponse.json()
@@ -359,7 +358,7 @@ function App() {
       setError('')
 
       const response = await fetch(
-        `http://localhost:5050/api/workouts/${workoutId}`,
+        `${API_BASE_URL}/api/workouts/${workoutId}`,
         {
           method: 'DELETE',
         }
@@ -438,7 +437,7 @@ function App() {
       setSavingProfile(true)
 
       const response = await fetch(
-        'http://localhost:5050/api/profile',
+        `${API_BASE_URL}/api/profile`,
         {
           method: 'PUT',
           headers: {
