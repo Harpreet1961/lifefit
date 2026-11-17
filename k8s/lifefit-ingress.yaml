@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lifefit-ingress
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: lifefit-backend-service
+                port:
+                  number: 5050
+
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lifefit-frontend-service
+                port:
+                  number: 80

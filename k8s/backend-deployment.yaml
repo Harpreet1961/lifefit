@@ -16,10 +16,32 @@ spec:
     spec:
       containers:
         - name:  backend
-          image: lifefit-backend:4.0
+          image: lifefit-backend:4.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5050
+          livenessProbe:
+            tcpSocket:
+              port: 5050
+            initialDelaySeconds: 10 # Wait 15s before running the first probe
+            periodSeconds: 10 # How often to perform the probe
+            timeoutSeconds: 2 # Number of seconds after which the probe times out
+            failureThreshold: 3 # Number of consecutive failures before restarting
+          readinessProbe:
+            httpGet:
+              path: api/health
+              port: 5050
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           env:
             - name: PORT
               value: "5050"

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: lifefit-quota
+spec:
+  hard:
+    requests.cpu: "1"
+    requests.memory: "1Gi"
+    limits.cpu: "2.5"
+    limits.memory: "2.5Gi"
+    pods: "10"
+    secrets: "10"
+    persistentvolumeclaims: "5"
