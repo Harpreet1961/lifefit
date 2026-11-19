@@ -1,0 +1,64 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lifefit-backend
+  labels:
+    app: lifefit-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lifefit-backend
+  template:
+    metadata:
+      labels:
+        app: lifefit-backend
+    spec:
+      containers:
+        - name: backend
+          image: 026090516448.dkr.ecr.ap-south-1.amazonaws.com/lifefit-backend:4.0
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 5050
+
+          env:
+            - name: PORT
+              value: "5050"
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lifefit-db-secret
+                  key: POSTGRES_PASSWORD
+
+          livenessProbe:
+            tcpSocket:
+              port: 5050
+            initialDelaySeconds: 15
+            periodSeconds: 10
+
+          readinessProbe:
+            tcpSocket:
+              port: 5050
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+          volumeMounts:
+            - name: backend-config
+              mountPath: /app/config
+              readOnly: true
+
+      volumes:
+        - name: backend-config
+          configMap:
+            name: lifefit-backend-config

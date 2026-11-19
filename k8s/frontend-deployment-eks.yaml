@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lifefit-frontend
+  labels:
+    app: lifefit-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lifefit-frontend
+  template:
+    metadata:
+      labels:
+        app: lifefit-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: 026090516448.dkr.ecr.ap-south-1.amazonaws.com/lifefit-frontend:3.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"

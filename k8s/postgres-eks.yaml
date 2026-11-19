@@ -4,6 +4,8 @@ metadata:
   name: lifefit-postgres
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
 
   selector:
     matchLabels:
@@ -45,7 +47,7 @@ spec:
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
 
-     
+          
           resources:
             requests:
               cpu: "100m"
@@ -68,12 +70,19 @@ spec:
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
+            - name: db-init
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true
 
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: lifefit-postgres-pvc
-
+        - name: db-init
+          configMap:
+            name: lifefit-db-init
+          
+        
 ---
 apiVersion: v1
 kind: Service
