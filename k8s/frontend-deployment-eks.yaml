@@ -28,3 +28,12 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "250m"
+          volumeMounts:
+            - name: frontend-config
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+
+      volumes:
+        - name: frontend-config
+          configMap:
+            name: lifefit-frontend-config
